@@ -21,6 +21,8 @@ public class TransitionService : ITransitionServices
     {
        var transaction= creationModel.MapTo<Transaction>();
         appDbContext.Transactions.Add(transaction);
+        var card=appDbContext.Cards.FirstOrDefault(x=>x.Id==creationModel.CardId);
+        card.Balance = card.Balance - 2000;
         appDbContext.SaveChanges();
         return transaction.MapTo<TransactionViewModel>();
     }
