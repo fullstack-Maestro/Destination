@@ -25,19 +25,37 @@ public class UserService : IUserService
         return user.MapTo<UserViewModel>();
     }
 
-    public bool Delete(int id)
+    public UserViewModel LogIn(string email, string password)
+    {
+        var existUser = appDbContext.Users.FirstOrDefault(x => x.Email == email);
+        if (existUser is null)
+        {
+            throw new Exception($"This user is not found with this email: {email}");
+        }
+        if (existUser.Password != password)
+        {
+            throw new Exception($"This password is wrong");
+        }
+        return existUser.MapTo<UserViewModel>();
+    }
+
+    public bool Delete(long id, string password)
     {
        var user= appDbContext.Users.FirstOrDefault(x => x.Id == id);
         if (user is null)
         {
             throw new Exception("User is not found");
         }
+        if(user.Password != password)
+        {
+            throw new Exception("This password is wrong!");
+        }
        var res= appDbContext.Users.Remove(user);
        appDbContext.SaveChanges();
        return true;
     }
 
-    public UserViewModel Get(int id)
+    public UserViewModel Get(long id)
     {
         var user = appDbContext.Users.FirstOrDefault(x => x.Id == id);
         if (user is null)
@@ -54,7 +72,7 @@ public class UserService : IUserService
         return res.ToList();
     }
 
-    public UserViewModel Update(int id, UserCreationModel userViewModel)
+    public UserViewModel Update(long id, UserUpdateModel userViewModel)
     {
         var user = appDbContext.Users.FirstOrDefault(x => x.Id == id);
         if (user is null)

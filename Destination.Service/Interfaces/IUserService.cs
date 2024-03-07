@@ -10,8 +10,8 @@ namespace Destination.Service.Interfaces;
 public interface IUserService
 {
     public UserViewModel Create(UserCreationModel userCreation);
-    public UserViewModel Update(int id, UserCreationModel userViewModel);
-    public bool Delete(int id);
-    public UserViewModel Get(int id);
+    public UserViewModel Update(long id, UserUpdateModel userViewModel);
+    public bool Delete(long id, string password);
+    public UserViewModel Get(long id);
     public List<UserViewModel> GetAll();
 }
